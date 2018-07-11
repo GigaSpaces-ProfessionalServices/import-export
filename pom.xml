@@ -19,15 +19,21 @@
         </pluginRepository>
     </pluginRepositories>
     <properties>
-        <gsVersion>9.5.2-RELEASE</gsVersion>
+        <gsVersion>12.3.1</gsVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skipTests>true</skipTests>
     </properties>
 
     <dependencies>
         <dependency>
+            <groupId>org.gigaspaces</groupId>
+            <artifactId>xap-openspaces</artifactId>
+            <version>${gsVersion}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.gigaspaces</groupId>
-            <artifactId>gs-openspaces</artifactId>
+            <artifactId>xap-admin</artifactId>
             <version>${gsVersion}</version>
         </dependency>
 

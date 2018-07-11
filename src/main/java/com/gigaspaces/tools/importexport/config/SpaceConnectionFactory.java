@@ -64,7 +64,8 @@ public class SpaceConnectionFactory {
 
     public void close() throws Exception {
         if(urlSpaceConfigurer != null){
-            urlSpaceConfigurer.destroy();
+            urlSpaceConfigurer.close();
+//            urlSpaceConfigurer.destroy();
         }
 
         if(admin != null){
