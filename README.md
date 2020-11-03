@@ -33,10 +33,10 @@ mvn clean package
 Option 1 (from the IDE using maven) <br/>
  a. Deploy the newly built export-import-1.0.SNAPSHOT.jar into your local git repository. <br/>
 
-        mvn install:install-file -Dfile=../import-export/target/export-import-1.0-SNAPSHOT.jar -DgroupId=org.gigaspaces -DartifactId=xap-export-import -Dversion=14.5.0 -Dpackaging=jar
+        mvn install:install-file -Dfile=../import-export/target/export-import-1.0-SNAPSHOT.jar -DgroupId=org.gigaspaces -DartifactId=xap-export-import -Dversion=15.5.0 -Dpackaging=jar
  b. Click on "Edit Configurations" and set it with: <br/>
  Main class: com.gigaspaces.tools.importexport.Program <br/>
- Program arguments: -o export -l $LOOKUPLOCATORS -s <Your Space> -d <Yout output location> 
+ Program arguments: -o export -l $LOOKUPLOCATORS -s {your Space} -d {your output location} 
 
  ![snapshot](Pictures/Picture1.png)
  
