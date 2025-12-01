@@ -6,7 +6,7 @@ PROJ_DIR="/home/dixson/export-import"
 LOOKUPLOCATORS="localhost"
 
 CLASSPATH="$GS_HOME/lib/required/*"
-CLASSPATH="$CLASSPATH:$PROJ_DIR/lib/*"
+CLASSPATH="$CLASSPATH:$PROJ_DIR/target/export-import-1.0-SNAPSHOT/lib/*"
 CLASSPATH="$CLASSPATH:$PROJ_DIR/target/export-import-1.0-SNAPSHOT.jar"
 
 $JAVA_HOME/bin/java -cp "$CLASSPATH" \
