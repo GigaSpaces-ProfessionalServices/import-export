@@ -46,6 +46,9 @@ local.properties
 target/
 **/target/*
 
+# Ignore log directories
+**/logs/
+
 #gigaspaces
 gigaspaces/*
 
