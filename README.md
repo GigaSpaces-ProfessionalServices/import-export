@@ -1,51 +1,49 @@
 # Introduction
 
-The Import/Export tool was created as a collaborative effort between GigaSpaces Professional Services and GigaSpaces Support to facilitate reliable and efficient snapshots of data in a XAP datagrid.
+The Export/Import tool is used to facilitate reliable and efficient snapshots of data in GigaSpaces using Java Serialization.
 
-Instructions on how to use the Import/Export tool and how it was implemented can be found on GigaSpaces [Best Practices](http://docs.gigaspaces.com/sbp/export-import-tool.html) wiki.
+Instructions on how to use the Import/Export tool and how it was implemented can be found on GigaSpaces [Solution Hub](https://docs.gigaspaces.com/latest/solution-hub/export-import-tool.html) wiki.
 
 ### Build and Running the Tool
-#### PreRequisites
+#### Prerequisites
  * Java IDE
- * JDK 1.8
+ * JDK 17
  * Apache Maven
  
 ##### Configuration
-Check the pom.xml file to ensure `gsVersion` is configured to use the same version of XAP you installed with the Maven Plugin.
-
-> To determine the exact version number you will need to pull it from within `<XAP_INSTALL_DIR>/tools/maven/maven-openspaces-plugin/pom.xml`
-> Alternatively you can find the version as a directory name in your .m2 folder `.m2/repository/com/gigaspaces/gs-openspaces`
-
-
+Check the pom.xml file to ensure `gigaspaces.version` is configured to use the same version of GigaSpaces you have installed.
+```
     <properties>
-        <gsVersion>15.5.0</gsVersion>
+        <gigaspaces.version>17.1.2</gigaspaces.version>
         ...
     </properties>
-
+```
 
 #### Building
 
 mvn clean package
 
-
 #### Running
 
-Option 1 (from the IDE using maven) <br/>
- a. Deploy the newly built export-import-1.0.SNAPSHOT.jar into your local git repository. <br/>
-
-        mvn install:install-file -Dfile=../import-export/target/export-import-1.0-SNAPSHOT.jar -DgroupId=org.gigaspaces -DartifactId=xap-export-import -Dversion=15.5.0 -Dpackaging=jar
- b. Click on "Edit Configurations" and set it with: <br/>
- Main class: com.gigaspaces.tools.importexport.Program <br/>
- Program arguments: -o export -l $LOOKUPLOCATORS -s {your Space} -d {your output location} --jarless
+######Option 1 (from the IDE using maven)
+1. Deploy the newly built export-import-1.0.SNAPSHOT.jar into your local git repository.
+   ``` 
+   mvn install:install-file -Dfile=../import-export/target/export-import-1.0-SNAPSHOT.jar -DgroupId=org.gigaspaces -DartifactId=xap-export-import -Dversion=15.5.0 -Dpackaging=jar
+   ```
+2. Click on "Edit Configurations" and set it with:  
+ **Main class**: `com.gigaspaces.tools.importexport.Program`  
+ **Program arguments**: `-o export -l $LOOKUPLOCATORS -s {your Space} -d {your output location} --jarless`
 
  ![snapshot](Pictures/Picture1.png)
  
- Option 2 (from CLI using maven classpath) - currently not working <br/>
- 
-        mvn exec:java -Dexec.mainClass=com.gigaspaces.tools.importexport.Program -o export -l $LOOKUPLOCATORS -s mySpace -d /var/exporter/output
+######Option 2 (from CLI using maven classpath) - currently not working
+```
+mvn exec:java -Dexec.mainClass=com.gigaspaces.tools.importexport.Program -Dexec.args="-o export -l $LOOKUPLOCATORS -s mySpace -d /var/exporter/output"
+```
 
-Option 3 (setting the classpath) <br/>
- a. Copy the newly built export-import-1.0.SNAPSHOT.jar into the lib directory. <br/>
- b. Run <br/>
- 
-        $JAVA_HOME\bin\java -cp $GS_HOME/lib/required/*:./lib/* com.gigaspaces.tools.importexport.Program -o export -l $LOOKUPLOCATORS -s mySpace -d /var/exporter/output
+######Option 3 (setting the classpath)
+ 1. Copy the newly built export-import-1.0.SNAPSHOT.jar into the lib directory.  
+ 2. Run 
+    ```
+    $JAVA_HOME\bin\java -cp $GS_HOME/lib/required/*:./lib/* com.gigaspaces.tools.importexport.Program -o export -l $LOOKUPLOCATORS -s mySpace -d /var/exporter/output
+    ```

@@ -2,18 +2,20 @@ package com.gigaspaces.tools.importexport.config;
 
 import com.gigaspaces.tools.importexport.Constants;
 import com.gigaspaces.tools.importexport.remoting.RouteTranslator;
-import com.google.common.base.Joiner;
+//import com.google.common.base.Joiner;
 import com.j_spaces.core.IJSpace;
 import org.openspaces.admin.Admin;
 import org.openspaces.admin.AdminFactory;
 import org.openspaces.core.GigaSpace;
 import org.openspaces.core.GigaSpaceConfigurer;
-import org.openspaces.core.space.UrlSpaceConfigurer;
+import org.openspaces.core.space.SpaceProxyConfigurer;
+import java.util.Collection;
+//import org.openspaces.core.space.UrlSpaceConfigurer;
 
 import java.util.List;
 import java.util.logging.Logger;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
+//import static com.google.common.base.Strings.isNullOrEmpty;
 
 public class SpaceConnectionFactory {
 
@@ -21,7 +23,8 @@ public class SpaceConnectionFactory {
     private static final int LOOKUP_TIMEOUT = 2000;
 
     private ExportConfiguration config;
-    private UrlSpaceConfigurer urlSpaceConfigurer;
+
+    private SpaceProxyConfigurer configurer;
     private GigaSpace space;
     private Admin admin;
     private RouteTranslator router;
@@ -33,21 +36,24 @@ public class SpaceConnectionFactory {
     public GigaSpace createProxy() {
 
         if(space == null) {
-            urlSpaceConfigurer = new UrlSpaceConfigurer("jini://*/*/" + config.getName());
-            urlSpaceConfigurer.lookupLocators(join(config.getLocators()));
-            urlSpaceConfigurer.lookupGroups(join(config.getGroups()));
+            configurer = new SpaceProxyConfigurer(config.getName());
+            //urlSpaceConfigurer = new UrlSpaceConfigurer("jini://*/*/" + config.getName());
+            if (!isNullOrEmpty(config.getLocators())) {
+                configurer.lookupLocators(join(config.getLocators()));
+            }
+            if (! isNullOrEmpty(config.getGroups())) {
+                configurer.lookupGroups(join(config.getGroups()));
+            }
 
             if ((!isNullOrEmpty(config.getUsername()) && !isNullOrEmpty(config.getPassword())) && isSecuredComponent(SecurityLevel.SPACE)) {
                 logger.info("Using secured connection.");
-                urlSpaceConfigurer.credentials(config.getUsername(), config.getPassword());
+                configurer.credentials(config.getUsername(), config.getPassword());
             }
 
-            GigaSpaceConfigurer gigaSpaceConfigurer = new GigaSpaceConfigurer(urlSpaceConfigurer.lookupTimeout(LOOKUP_TIMEOUT));
+            configurer.lookupTimeout(LOOKUP_TIMEOUT);
+            space = new GigaSpaceConfigurer(configurer).gigaSpace();
 
-            space = gigaSpaceConfigurer.create();
-
-            IJSpace space1 = space.getSpace();
-            logger.info("Creating connection with url: \n" + space1.getURL());
+            logger.info("Creating connection with url: \n" + space.getSpace().getURL());
         }
 
         return space;
@@ -57,14 +63,35 @@ public class SpaceConnectionFactory {
         SecurityLevel configLevel = config.getSecurity();
         return configLevel == SecurityLevel.BOTH || configLevel == securityLevel;
     }
-
+    private boolean isNullOrEmpty(Object o) {
+        if (o instanceof String) {
+            String s = (String) o;
+            if (s == null || s.isEmpty()) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else if (o instanceof Collection) {
+            Collection c = (Collection) o;
+            if (c == null || c.size() == 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        throw new UnsupportedOperationException("This method only supports String and Collection types.");
+    }
     private String join(List<String> args) {
-        return Joiner.on(",").join(args);
+        return String.join(",", args);
+        //return Joiner.on(",").join(args);
     }
 
     public void close() throws Exception {
-        if(urlSpaceConfigurer != null){
-            urlSpaceConfigurer.close();
+        if(configurer != null){
+            configurer.close();
         }
 
         if(admin != null){

@@ -1,11 +1,10 @@
 package com.gigaspaces.tools.importexport.threading;
 
-import com.gigaspaces.client.iterator.GSIteratorConfig;
-import com.gigaspaces.client.iterator.IteratorScope;
+import com.gigaspaces.client.iterator.SpaceIterator;
+import com.gigaspaces.client.iterator.SpaceIteratorConfiguration;
 import com.gigaspaces.tools.importexport.Constants;
 import com.gigaspaces.tools.importexport.config.ExportConfiguration;
 import com.gigaspaces.tools.importexport.lang.SpaceClassDefinition;
-import com.j_spaces.core.client.GSIterator;
 import org.openspaces.core.GigaSpace;
 
 import java.io.BufferedOutputStream;
@@ -54,11 +53,11 @@ public class FileCreatorThread implements Callable<ThreadAudit> {
             log(output, "Exception: " + ex.getMessage());
             output.setException(ex);
         } finally {
-            if(zippedOutputStream != null){
+            if (zippedOutputStream != null) {
                 zippedOutputStream.close();
             }
 
-            if(objectOutputStream != null){
+            if (objectOutputStream != null) {
                 objectOutputStream.close();
             }
 
@@ -72,21 +71,26 @@ public class FileCreatorThread implements Callable<ThreadAudit> {
     private int iterateSpaceObjects(GigaSpace space, SpaceClassDefinition definition, ThreadAudit audit) throws Exception {
         int output = 0;
 
-        GSIteratorConfig gsIteratorConfig = new GSIteratorConfig();
-        gsIteratorConfig.setBufferSize(config.getBatch()).setIteratorScope(IteratorScope.CURRENT);
         Collection<Object> templates = new ArrayList<>();
         templates.add(definition.toTemplate());
+/*
+        GSIteratorConfig gsIteratorConfig = new GSIteratorConfig();
+        gsIteratorConfig.setBufferSize(config.getBatch()).setIteratorScope(IteratorScope.CURRENT);
 
         GSIterator gsIterator = new GSIterator(space.getSpace(), templates, gsIteratorConfig);
+ */
 
-        while(gsIterator.hasNext()){
+        SpaceIteratorConfiguration spaceIteratorConfig = new SpaceIteratorConfiguration();
+        SpaceIterator gsIterator = space.iterator(definition.toTemplate(), spaceIteratorConfig);
+
+        while (gsIterator.hasNext()) {
             Object instance = gsIterator.next();
             Object routingValue = definition.getRoutingValue(instance);
 
             int hashCode = adjustNegativeHashCodes(routingValue.hashCode());
             int realRoute = (hashCode % this.newPartitionSchema) + 1;
 
-            if(realRoute == newPartitionId) {
+            if (realRoute == newPartitionId) {
                 writeToFile(instance, definition, audit);
                 output++;
             }
@@ -105,7 +109,7 @@ public class FileCreatorThread implements Callable<ThreadAudit> {
     }
 
     private void ensureFileInitialized(SpaceClassDefinition definition, ThreadAudit audit) throws Exception {
-        if(!fileInitialized) {
+        if (!fileInitialized) {
             String filePath = config.getDirectory() + File.separator + audit.getFileName();
             zippedOutputStream = new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream(filePath)));
             objectOutputStream = new ObjectOutputStream(zippedOutputStream);
