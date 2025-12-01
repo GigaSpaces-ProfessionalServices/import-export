@@ -1,0 +1,25 @@
+2025-11-14 16:05:28,981  INFO [net.jini.discovery.LookupLocatorDiscovery] - Connected to LUS using locator localhost:4174
+2025-11-14 16:05:29,235  INFO [exportimport] - Creating connection with url: 
+/./demo?total_members=2,0&id=2&cluster_schema=partitioned&schema=default&locators=localhost&groups=xap-17.1.2&state=started
+2025-11-14 16:05:29,295  INFO [exportimport] - Started import/export operation with the following configuration: 
+EXPORT [Space: demo, Lookup Groups: [], Lookup Locators: [localhost], Output/Input Directory: /home/dixson/exporter/output, Operating Partitions: '[1, 2]', Export/Import Classes: '[com.j_spaces.examples.benchmark.messages.MessagePOJO]', XAP Read Batch Size: 1000, PU Name Override: null, Security level: null, New partition count: Not specified, Threads: 20, Jarless: true, Thread sleep ms: 1000]
+
+2025-11-14 16:05:29,315  INFO [com.gigaspaces.lrmi] - Listening to incoming connections on /127.0.1.1:8206 (reader threads: 4, writer threads: 4)
+2025-11-14 16:05:31,297  INFO [exportimport] - Partition 1 Finished ---------------------
+
+	Partition Id: 1
+	Process Id: 2471860
+	Hostname: dixson-pc
+	Elapsed Process Time (ms): 1308
+
+	Files:
+
+2025-11-14 16:05:31,297  INFO [exportimport] - Partition 2 Finished ---------------------
+
+	Partition Id: 2
+	Process Id: 2471866
+	Hostname: dixson-pc
+	Elapsed Process Time (ms): 1306
+
+	Files:
+
