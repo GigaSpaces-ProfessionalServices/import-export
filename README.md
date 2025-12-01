@@ -25,7 +25,7 @@ mvn clean package
 
 #### Running
 
-######Option 1 (from the IDE using maven)
+###### Option 1 (from the IDE using maven)
 1. Deploy the newly built export-import-1.0.SNAPSHOT.jar into your local git repository.
    ``` 
    mvn install:install-file -Dfile=../import-export/target/export-import-1.0-SNAPSHOT.jar -DgroupId=org.gigaspaces -DartifactId=xap-export-import -Dversion=15.5.0 -Dpackaging=jar
@@ -36,12 +36,12 @@ mvn clean package
 
  ![snapshot](Pictures/Picture1.png)
  
-######Option 2 (from CLI using maven classpath) - currently not working
+###### Option 2 (from CLI using maven classpath) - currently not working
 ```
 mvn exec:java -Dexec.mainClass=com.gigaspaces.tools.importexport.Program -Dexec.args="-o export -l $LOOKUPLOCATORS -s mySpace -d /var/exporter/output"
 ```
 
-######Option 3 (setting the classpath)
+###### Option 3 (setting the classpath)
  1. Copy the newly built export-import-1.0.SNAPSHOT.jar into the lib directory.  
  2. Run 
     ```
